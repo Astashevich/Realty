@@ -11,11 +11,20 @@ namespace Realty.Frontend.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            Apartment firstApartment = new();
+            Apartment firstApartment = new()
+            {
+                Id = 1,
+                CreationDateTime = DateTime.Now,
+                HouseId = 1,
+                Floor = 4,
+                Price = 78000.0f,
+                LivingSpace = 42.2,
+                RoomAmount = 2
+            };
             Apartment secondApartment = new();
             List<Apartment> apartments = new() { firstApartment, secondApartment };
 
-            return Json(apartments);
+            return Json(new { apartmentsInfo = apartments });
         }
 
         [Route("get")]
@@ -24,9 +33,18 @@ namespace Realty.Frontend.Controllers
         {
             if (!id.HasValue) return NotFound("Id not provided");
 
-            Apartment apartment = new();
+            Apartment apartment = new()
+            {
+                Id = 1,
+                CreationDateTime = DateTime.Now,
+                HouseId = 1,
+                Floor = 4,
+                Price = 78000.0f,
+                LivingSpace = 42.2f,
+                RoomAmount = 2
+            };
 
-            return Json(apartment);
+            return Json(new { apartmentInfo = apartment });
         }
     }
 }
