@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Realty.Business.Models
+﻿namespace Realty.Business.Models
 {
     public class House : IdInfo
     {

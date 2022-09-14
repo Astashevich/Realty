@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Realty.Business.Models;
+using Realty.DAL.Repositories;
+using Realty.DAL;
 
 namespace Realty.Frontend.Controllers
 {
@@ -7,22 +9,18 @@ namespace Realty.Frontend.Controllers
     [ApiController]
     public class ApartmentController : Controller
     {
+        private readonly EFGenericRepository<Apartment, RealtyContext> _apartmentRepository;
+
+        public ApartmentController(EFGenericRepository<Apartment, RealtyContext> apartmentRepository)
+        {
+            _apartmentRepository = apartmentRepository;
+        }
+
         [Route("getall")]
         [HttpGet]
         public IActionResult GetAll()
         {
-            Apartment firstApartment = new()
-            {
-                Id = 1,
-                CreationDateTime = DateTime.Now,
-                HouseId = 1,
-                Floor = 4,
-                Price = 78000.0f,
-                LivingSpace = 42.2,
-                RoomAmount = 2
-            };
-            Apartment secondApartment = new();
-            List<Apartment> apartments = new() { firstApartment, secondApartment };
+            List<Apartment> apartments = _apartmentRepository.GetAllWithoutTracking().ToList();
 
             return Json(new { apartmentsInfo = apartments });
         }
@@ -33,16 +31,7 @@ namespace Realty.Frontend.Controllers
         {
             if (!id.HasValue) return NotFound("Id not provided");
 
-            Apartment apartment = new()
-            {
-                Id = 1,
-                CreationDateTime = DateTime.Now,
-                HouseId = 1,
-                Floor = 4,
-                Price = 78000.0f,
-                LivingSpace = 42.2f,
-                RoomAmount = 2
-            };
+            Apartment apartment = _apartmentRepository.GetWithoutTracking(x => x.Id == id.Value);
 
             return Json(new { apartmentInfo = apartment });
         }
