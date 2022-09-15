@@ -1,6 +1,9 @@
 ﻿import React from 'react';
 import { connect } from 'react-redux';
 import { getApartments } from './apartmentIndexActions.jsx';
+import { Table, Divider } from 'antd';
+import { Link } from 'react-router-dom';
+import { SearchOutlined } from "@ant-design/icons"
 
 class ApartmentIndex extends React.Component {
     componentDidMount() {
@@ -12,11 +15,36 @@ class ApartmentIndex extends React.Component {
         let isLoading = this.props.isLoading;
         let error = this.props.error;
 
-        if (isLoading) {
-            return (
-                <div>Loading data...</div>
-            );
-        }
+        let columnsInfo = [{
+            title: '№',
+            dataIndex: 'id',
+            key: 'id'
+        },
+        {
+            title: 'House ID',
+            dataIndex: 'houseId',
+            key: 'houseId',
+            render: (text, record) => (
+                <Link to={"/house/read/" + record.houseId}><SearchOutlined /> {record.houseId}</Link>
+            )
+        },
+        {
+            title: 'Room amount',
+            dataIndex: 'roomAmount',
+            key: 'roomAmount'
+        },
+        {
+            title: 'Price',
+            dataIndex: 'price',
+            key: 'price'
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (text, record) => (
+                <Link to={"/apartment/read/" + record.id}><SearchOutlined /> View</Link>
+            )
+        }];
 
         if (error) {
             return (
@@ -26,26 +54,13 @@ class ApartmentIndex extends React.Component {
 
         return (
             <div>
-                <h3>Apartment list</h3>
+                <Divider orientation={"center"}>Apartments list</Divider>
 
-                <table>
-                    <thead>
-                        <th>Floor</th>
-                        <th>Price</th>
-                        <th>Room amount</th>
-                        <th>Living space</th>
-                    </thead>
-                    <tbody>
-                        {apartmentsInfo.map(apartment => (
-                            <tr key={apartment.id}>
-                                <td>{apartment.floor}</td>
-                                <td>{apartment.price}</td>
-                                <td>{apartment.roomAmount}</td>
-                                <td>{apartment.livingSpace}</td>
-                            </tr>
-                            ))}
-                    </tbody>
-                </table>
+                <Table
+                    dataSource={apartmentsInfo}
+                    columns={columnsInfo}
+                    loading={isLoading}
+                />
             </div>
         );
     }
