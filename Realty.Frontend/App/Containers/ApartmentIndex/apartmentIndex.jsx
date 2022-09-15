@@ -7,15 +7,14 @@ import { SearchOutlined } from "@ant-design/icons"
 
 class ApartmentIndex extends React.Component {
     componentDidMount() {
-        this.props.getApartments();
+        this.props.getApartments(new Object());
     }
 
-    render() {
-        let apartmentsInfo = this.props.apartmentsInfo;
-        let isLoading = this.props.isLoading;
-        let error = this.props.error;
+    handleTableChange(pagination, filters, sorter) {
+        this.props.getApartments(pagination);
+    }
 
-        let columnsInfo = [{
+    columnsInfo = [{
             title: '№',
             dataIndex: 'id',
             key: 'id'
@@ -46,6 +45,12 @@ class ApartmentIndex extends React.Component {
             )
         }];
 
+    render() {
+        let apartmentsInfo = this.props.apartmentsInfo.map(item => ({ ...item, key: item.id }));
+        let isLoading = this.props.isLoading;
+        let error = this.props.error;
+        let totalCount = this.props.totalCount;
+
         if (error) {
             return (
                 <div>Error in data loading: {error}</div>
@@ -58,8 +63,10 @@ class ApartmentIndex extends React.Component {
 
                 <Table
                     dataSource={apartmentsInfo}
-                    columns={columnsInfo}
+                    columns={this.columnsInfo}
                     loading={isLoading}
+                    pagination={{ total: totalCount }}
+                    onChange={this.handleTableChange.bind(this)}
                 />
             </div>
         );
@@ -70,13 +77,14 @@ let mapStateToProps = (state) => {
     return {
         apartmentsInfo: state.ApartmentIndexReducer.apartmentsInfo,
         isLoading: state.ApartmentIndexReducer.isLoading,
-        error: state.ApartmentIndexReducer.error
+        error: state.ApartmentIndexReducer.error,
+        totalCount: state.ApartmentIndexReducer.totalCount
     }
 };
 
 let mapActionsToProps = (dispatch) => {
     return {
-        getApartments: () => dispatch(getApartments())
+        getApartments: (pagination) => dispatch(getApartments(pagination))
     };
 };
 
