@@ -1,6 +1,9 @@
 ﻿import React from 'react';
 import { connect } from 'react-redux';
 import { getHouses } from './houseIndexActions.jsx';
+import { Table, Divider } from 'antd';
+import { Link } from 'react-router-dom';
+import { SearchOutlined } from "@ant-design/icons"
 
 class HouseIndex extends React.Component {
     componentDidMount() {
@@ -12,11 +15,28 @@ class HouseIndex extends React.Component {
         let isLoading = this.props.isLoading;
         let error = this.props.error;
 
-        if (isLoading) {
-            return (
-                <div>Loading data...</div>
-            );
-        }
+        let columnsInfo = [{
+            title: '№',
+            dataIndex: 'id',
+            key: 'id'
+            },
+            {
+                title: 'Build year',
+                dataIndex: 'buildYear',
+                key: 'buildYear'
+            },
+            {
+                title: 'Address',
+                dataIndex: 'address',
+                key: 'address'
+            },
+            {
+                title: 'Action',
+                key: 'action',
+                render: (text, record) => (
+                    <Link to={"/house/read/" + record.id}><SearchOutlined/> View</Link>
+                )
+            }];
 
         if (error) {
             return (
@@ -26,24 +46,13 @@ class HouseIndex extends React.Component {
 
         return (
             <div>
-                <h3>House list</h3>
+                <Divider orientation={"center"}>House list</Divider>
 
-                <table>
-                    <thead>
-                        <th>ID</th>
-                        <th>Creation Date</th>
-                        <th>Address</th>
-                    </thead>
-                    <tbody>
-                        {housesInfo.map(house => (
-                            <tr key={house.id}>
-                                <td>{house.id}</td>
-                                <td>{house.buildYear}</td>
-                                <td>{house.address}</td>
-                            </tr>
-                            ))}
-                    </tbody>
-                </table>
+                <Table
+                    dataSource={housesInfo}
+                    columns={columnsInfo}
+                    loading={isLoading}
+                />
             </div>
         );
     }

@@ -1,10 +1,14 @@
 ﻿import React from 'react';
 import { connect } from 'react-redux';
 import { getApartment } from './apartmentReadActions.jsx';
+import { Link } from 'react-router-dom';
+import { Descriptions, Divider, Row, Col, Spin } from 'antd';
+import { RollbackOutlined } from "@ant-design/icons"
 
 class ApartmentRead extends React.Component {
     componentDidMount() {
-        this.props.getApartment(1);
+        const id = this.props.match.params.id;
+        this.props.getApartment(id);
     }
 
     render() {
@@ -14,7 +18,9 @@ class ApartmentRead extends React.Component {
 
         if (isLoading) {
             return (
-                <div>Loading data...</div>
+                <div style={{ textAlign: "center", marginTop: "200px" }}>
+                    <Spin size="large" />
+                </div>
             );
         }
 
@@ -26,26 +32,28 @@ class ApartmentRead extends React.Component {
 
         return (
             <div>
-                <h3>Information about single apartment</h3>
+                <Divider orientation={"center"}>Information about single apartment</Divider>
 
-                <div>
-                    <span>Floor: </span>
-                    <span>{apartmentInfo.floor} </span>
-                </div>
-                <div>
-                    <span>Price: </span>
-                    <span>{apartmentInfo.price} </span>
-                </div>
-                <div>
-                    <span>Room amount: </span>
-                    <span>{apartmentInfo.roomAmount} </span>
-                </div>
-                <div>
-                    <span>Living space: </span>
-                    <span>{apartmentInfo.livingSpace} </span>
+                <Row>
+                    <Col span={4}>
+                        <img key="house_logo" width={160} height={160} src="/images/apartment_logo.png" />
+                    </Col>
+                    <Col span={20}>
+                        <Descriptions bordered column={2}>
+                            <Descriptions.Item label="Id in DB">{apartmentInfo.id}</Descriptions.Item>
+                            <Descriptions.Item label="House id:">{apartmentInfo.houseId}</Descriptions.Item>
+                            <Descriptions.Item label="Floor:">{apartmentInfo.floor}</Descriptions.Item>
+                            <Descriptions.Item label="Price:">{apartmentInfo.price}</Descriptions.Item>
+                            <Descriptions.Item label="Room amount:">{apartmentInfo.roomAmount}</Descriptions.Item>
+                            <Descriptions.Item label="Living space:">{apartmentInfo.livingSpace}</Descriptions.Item>
+                        </Descriptions>
+                    </Col>
+                </Row>
+                <div style={{ textAlign: "center", marginTop: "50px", fontWeight: "bold" }}>
+                    <Link to={"/apartment/index"}><RollbackOutlined /> Back to apartment list</Link>
                 </div>
             </div>
-            );
+        );
     }
 }
 

@@ -4,6 +4,7 @@ import App from './Containers/app.jsx';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
+import "antd/dist/antd.css";
 
 import HouseReadReducer from './Containers/HouseRead/houseReadReducer.jsx';
 import HouseIndexReducer from './Containers/HouseIndex/houseIndexReducer.jsx';

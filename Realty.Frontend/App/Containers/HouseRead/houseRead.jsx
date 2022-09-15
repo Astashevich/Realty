@@ -1,10 +1,14 @@
 ﻿import React from 'react';
 import { connect } from 'react-redux';
 import { getHouse } from './houseReadActions.jsx';
+import { Link } from 'react-router-dom';
+import { Descriptions, Divider, Row, Col, Spin } from 'antd';
+import { RollbackOutlined } from "@ant-design/icons"
 
 class HouseRead extends React.Component {
     componentDidMount() {
-        this.props.getHouse(1);
+        const id = this.props.match.params.id;
+        this.props.getHouse(id);
     }
 
     render() {
@@ -14,7 +18,9 @@ class HouseRead extends React.Component {
 
         if (isLoading) {
             return (
-                <div>Loading data...</div>
+                <div style={{ textAlign: "center", marginTop: "200px" }}>
+                    <Spin size="large"/>
+                </div>
             );
         }
 
@@ -26,22 +32,27 @@ class HouseRead extends React.Component {
 
         return (
             <div>
-                <h3>Information about single house</h3>
+                <Divider orientation={"center"}>Information about single house</Divider>
 
-                <div>
-                    <span>Adress: </span>
-                    <span>{houseInfo.address} </span>
-                </div>
-                <div>
-                    <span>Build year: </span>
-                    <span>{houseInfo.buildYear} </span>
-                </div>
-                <div>
-                    <span>Max floor: </span>
-                    <span>{houseInfo.maxFloor} </span>
+                <Row>
+                    <Col span={4}>
+                        <img key="house_logo" width={160} height={160} src="/images/house_logo_gray.png" />
+                    </Col>
+                    <Col span={20}>
+                        <Descriptions bordered column={2}>
+                            <Descriptions.Item label="Id in DB">{houseInfo.id}</Descriptions.Item>
+                            <Descriptions.Item label="Creation date:">{houseInfo.creationDateTime}</Descriptions.Item>
+                            <Descriptions.Item label="Adress:">{houseInfo.address}</Descriptions.Item>
+                            <Descriptions.Item label="Build year:">{houseInfo.buildYear}</Descriptions.Item>
+                            <Descriptions.Item label="Max floor:">{houseInfo.maxFloor}</Descriptions.Item>
+                        </Descriptions>
+                    </Col>
+                </Row>
+                <div style={{ textAlign: "center", marginTop: "50px", fontWeight: "bold" }}>
+                    <Link to={"/house/index"}><RollbackOutlined/> Back to houses list</Link>
                 </div>
             </div>
-            );
+        );
     }
 }
 
