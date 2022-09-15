@@ -9,7 +9,8 @@ const initialState = {
         { id: 1, address: null, buildYear: null, wallMaterial: null, maxFloor: null }
     ],
     isLoading: false,
-    error: null
+    error: null,
+    totalCount: null
 };
 
 export default function houses(state = initialState, action) {
@@ -18,7 +19,7 @@ export default function houses(state = initialState, action) {
             return { ...state, isLoading: true };
 
         case GET_HOUSES_SUCCESS:
-            return { ...state, isLoading: false, housesInfo: action.housesInfo };
+            return { ...state, isLoading: false, housesInfo: action.housesInfo, totalCount: action.totalCount };
 
         case GET_HOUSES_ERROR:
             return { ...state, isLoading: false, error: action.error };

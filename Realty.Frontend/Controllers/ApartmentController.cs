@@ -18,11 +18,21 @@ namespace Realty.Frontend.Controllers
 
         [Route("getall")]
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll(int? page, int? pageSize)
         {
-            List<Apartment> apartments = _apartmentRepository.GetAllWithoutTracking().ToList();
+            int targetPage = page.GetValueOrDefault(1);
+            int targetPageSize = pageSize.GetValueOrDefault(10);
 
-            return Json(new { apartmentsInfo = apartments });
+            IQueryable<Apartment> allEntities = _apartmentRepository.GetAllWithoutTracking();
+
+            int totalCount = allEntities.Count();
+
+            List<Apartment> apartmentsInfo = allEntities
+                .Skip((targetPage - 1) * targetPageSize)
+                .Take(targetPageSize)
+                .ToList();
+
+            return Json(new { apartmentsInfo, totalCount });
         }
 
         [Route("get")]
